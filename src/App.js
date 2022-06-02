@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Quotes from "./Quotes";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () =>{
+
+    const [quote, setQuote] = React.useState({});
+
+    React.useEffect(() =>{
+
+        const generateQuote = async () =>{
+    
+            const response = await fetch("https://type.fit/api/quotes");
+            const data = await response.json();
+            setQuote(data);
+    
+        };
+        generateQuote();
+
+    }, []);
+
+    const [number, setNumber] = React.useState(0);
+
+    const newQuote = () =>{
+        setNumber(prevNumber => (Math.trunc(Math.random() * quote.length) + 1));
+    };
+
+
+    return(
+
+        <div>
+            <Quotes 
+                name={quote[number]?.author === null ? "Unknown" : quote[number]?.author}
+                quote={quote[number]?.text}
+                newQuote={newQuote}
+            />
+        </div>
+
+    );
+};
 
 export default App;
